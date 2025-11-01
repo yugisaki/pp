@@ -30,17 +30,32 @@ void run() {
     #endif
     int execResult = system(run.c_str());
 }
+void newProject(std::string name) {
+    std::filesystem::path cwd = std::filesystem::current_path();
+    std::string mkdir;
+    #if defined(_WIN32) || defined(_WIN64)
+     mkdir = "mkdir " + cwd.string() + "\\" + name;
+    #else
+    mkdir = "mkdir " + cwd.string() + "/" + name;
+    #endif
+    std::filesystem::path new_dir;
+    system(mkdir.c_str());
+
+}
 
 int main(int argc, char** argv) {
     if (argc > 1) {
-        for (int i = 0; i < command_len; i++) {
-
-            if (std::strcmp(argv[1], command[i]) == 0) {
-                run();
-                return 0;
+        if (std::strcmp(argv[1],"run") == 0){
+            run();
+        }else if(std::strcmp(argv[1],"new") == 0){
+            if (argc > 2){
+                newProject(argv[2]); //name new cannot be used
+            }else{
+                std::cerr << "name of the project not found\n" << argv << "\n";
             }
+        }else{
+            std::cerr << "Unknown command: " << argv[1] << "\n";
         }
-        std::cerr << "Unknown command: " << argv[1] << "\n";
     } else {
         std::cout << "No command was given.\n";
     }
