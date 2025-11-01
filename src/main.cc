@@ -64,14 +64,20 @@ void newProject(std::string name) {
     system(mkdir_build.c_str());
     std::string main_cc_text = "#include <iostream>\n\nint main(){\n\tstd::cout << \"Hello, world!\" << std::endl;\n} ";
     std::string file_name;
+    std::string gitignore;
     #if defined(_WIN32) || defined(_WIN64)
     file_name = name + "\\src\\main.cc";
+    gitignore = name + "\\.gitignore";
     #else
     file_name = name + "/src/main.cc";
+    gitignore = name + "/.gitignore";
     #endif
     std::ofstream main_cc(file_name);
     main_cc << main_cc_text;
     main_cc.close();
+    std::ofstream gitignore_file(gitignore);
+    gitignore_file << "/build";
+    gitignore_file.close();
 }
 
 int main(int argc, char** argv) {
