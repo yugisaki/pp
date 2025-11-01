@@ -8,13 +8,18 @@
 void run() {
     std::filesystem::path cwd = std::filesystem::current_path();
     std::string compiletor;
+    std::string mkdir_build;
+
     #if defined(_WIN32) || defined(_WIN64)
         std::cout << "os: windows" << "\n";
+        mkdir_build = "mkdir " + cwd.string() + "\\build";
         compiletor = "clang++ " + cwd.string() + "\\src\\main.cc -o " + cwd.string() + "\\build\\pp";
     #else
         std::cout << "os: posix" << "\n";
+        mkdir_build = "mkdir " + cwd.string() + "/build";
         compiletor = "clang++ " + cwd.string() + "/src/main.cc -o " + cwd.string() + "/build/pp";
     #endif
+    system(mkdir_build.c_str());
     int compiled = system(compiletor.c_str());
     if (compiled != 0) {
         std::cerr << "Compilation failed with code: " << compiled << "\n";
@@ -32,13 +37,18 @@ void run() {
 void build(){
     std::filesystem::path cwd = std::filesystem::current_path();
     std::string compiletor;
+    std::string mkdir_build;
+
     #if defined(_WIN32) || defined(_WIN64)
         std::cout << "os: windows" << "\n";
+        mkdir_build = "mkdir " + cwd.string() + "\\build";
         compiletor = "clang++ " + cwd.string() + "\\src\\main.cc -o " + cwd.string() + "\\build\\pp";
     #else
         std::cout << "os: posix" << "\n";
+        mkdir_build = "mkdir " + cwd.string() + "/build";
         compiletor = "clang++ " + cwd.string() + "/src/main.cc -o " + cwd.string() + "/build/pp";
     #endif
+    system(mkdir_build.c_str());
     int compiled = system(compiletor.c_str());
     if (compiled != 0) {
         std::cerr << "Compilation failed with code: " << compiled << "\n";
@@ -95,8 +105,8 @@ void init() {
     std::string mkdir_build;
 
     #if defined(_WIN32) || defined(_WIN64)
-    mkdir_src = "mkdir " + cwd.string() + "\\" + name + "\\src";
-    mkdir_build = "mkdir " + cwd.string() + "\\" + name + "\\build";
+    mkdir_src = "mkdir " + cwd.string() + "\\src";
+    mkdir_build = "mkdir " + cwd.string() + "\\build";
     #else
     mkdir_src = "mkdir " + cwd.string() + "/src";
     mkdir_build = "mkdir " + cwd.string() + "/build";
