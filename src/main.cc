@@ -89,6 +89,46 @@ void newProject(std::string name) {
     clangd_file << "CompileFlags:\n\tAdd: [-I/pp/include]";
     clangd_file.close();
 }
+void init() {
+    std::filesystem::path cwd = std::filesystem::current_path();
+    std::string mkdir_src;
+    std::string mkdir_build;
+
+    #if defined(_WIN32) || defined(_WIN64)
+    mkdir_src = "mkdir " + cwd.string() + "\\" + name + "\\src";
+    mkdir_build = "mkdir " + cwd.string() + "\\" + name + "\\build";
+    #else
+    mkdir_src = "mkdir " + cwd.string() + "/src";
+    mkdir_build = "mkdir " + cwd.string() + "/build";
+    #endif
+    system(mkdir_src.c_str());
+    system(mkdir_build.c_str());
+    std::string main_cc_text = "#include <iostream>\n\nint main(){\n\tstd::cout << \"Hello, world!\" << std::endl;\n} ";
+    std::string file_name;
+    std::string gitignore;
+    std::string clangd;
+    #if defined(_WIN32) || defined(_WIN64)
+    file_name = "src\\main.cc";
+    gitignore = ".gitignore";
+    clangd = ".clangd";
+    #else
+    file_name = "src/main.cc";
+    gitignore = ".gitignore";
+    clangd = ".clangd";
+    #endif
+    std::ofstream main_cc(file_name);
+    main_cc << main_cc_text;
+    main_cc.close();
+
+    std::ofstream gitignore_file(gitignore);
+    gitignore_file << "/build\n.clangd";
+    gitignore_file.close();
+
+    std::ofstream clangd_file(clangd);
+    clangd_file << "CompileFlags:\n\tAdd: [-I/pp/include]";
+    clangd_file.close();
+}
+
 
 int main(int argc, char** argv) {
     if (argc > 1) {
@@ -102,6 +142,8 @@ int main(int argc, char** argv) {
             }else{
                 std::cerr << "name of the project not found\n" << argv << "\n";
             }
+        }else if(std::strcmp(argv[1],"init") == 0){
+            init();
         }else{
             std::cerr << "Unknown command: " << argv[1] << "\n";
         }
