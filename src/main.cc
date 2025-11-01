@@ -28,6 +28,7 @@ void run() {
     #endif
     int execResult = system(run.c_str());
 }
+
 void build(){
     std::filesystem::path cwd = std::filesystem::current_path();
     std::string compiletor;
@@ -44,6 +45,7 @@ void build(){
         return;
     }
 }
+
 void newProject(std::string name) {
     std::filesystem::path cwd = std::filesystem::current_path();
     std::string mkdir;
@@ -65,19 +67,27 @@ void newProject(std::string name) {
     std::string main_cc_text = "#include <iostream>\n\nint main(){\n\tstd::cout << \"Hello, world!\" << std::endl;\n} ";
     std::string file_name;
     std::string gitignore;
+    std::string clangd;
     #if defined(_WIN32) || defined(_WIN64)
     file_name = name + "\\src\\main.cc";
     gitignore = name + "\\.gitignore";
+    clangd = name + "\\.clangd";
     #else
     file_name = name + "/src/main.cc";
     gitignore = name + "/.gitignore";
+    clangd = name + "/.clangd";
     #endif
     std::ofstream main_cc(file_name);
     main_cc << main_cc_text;
     main_cc.close();
+
     std::ofstream gitignore_file(gitignore);
-    gitignore_file << "/build";
+    gitignore_file << "/build\n.clangd";
     gitignore_file.close();
+
+    std::ofstream clangd_file(clangd);
+    clangd_file << "CompileFlags:\n\tAdd: [-I/pp/include]";
+    clangd_file.close();
 }
 
 int main(int argc, char** argv) {
